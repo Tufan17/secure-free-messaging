@@ -1,7 +1,6 @@
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:sf_messageing/screens/login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key key}) : super(key: key);
@@ -12,26 +11,21 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+Future.delayed(Duration(seconds: 3),(){
+  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+});
+  }
+  @override
   Widget build(BuildContext context) {
+    Size size=MediaQuery.of(context).size;
     return Scaffold(
     body:Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GestureDetector(
-              onTap: (){
-                getData();
-              },
-              child: Text("data")),
-
-        ],
-      ),
-    ),
+      child:SizedBox(
+          height: size.height*0.5,
+          child: Lottie.asset("assets/animation/lf30_editor_9zueahck.json",repeat: false)),),
     );
-  }
-  getData() async {
-  await FirebaseFirestore.instance.collection("collection").add({
-    "num":Random().nextInt(100),
-  });
   }
 }
