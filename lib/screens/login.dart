@@ -12,10 +12,18 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
+  List useerList=[];
   bool login=true;
+  bool isUserName=true;
   TextEditingController forgetEmailController=TextEditingController();
 
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserNameList();
+  }
   @override
   Widget build(BuildContext context) {
     Size size =MediaQuery.of(context).size;
@@ -318,6 +326,11 @@ class _LoginPageState extends State<LoginPage> {
             ),
             padding: EdgeInsets.only(left: 5),
             child:TextField(
+              onChanged: (value){
+                setState(() {
+                  userName(value.toString());
+                });
+                },
               controller: controllerName,
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -325,6 +338,15 @@ class _LoginPageState extends State<LoginPage> {
                 icon:Icon(Icons.person),
               ),
             ) ,
+          ),
+          isUserName?SizedBox():Padding(
+            padding: EdgeInsets.only(right: size.width*0.1,top: 5),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Text("bu isim kullanılıyor",style: TextStyle(
+                color: Colors.red,
+              ),),
+            ),
           ),
           SizedBox(height: size.height*0.02,),
           Container(
@@ -400,10 +422,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   onPressedSignUp() async {
-    if (controllerRegisterPassword.text.isEmpty ||
+    if (isUserName==false||controllerRegisterPassword.text.isEmpty ||
         controllerRegisterMail.text.isEmpty ||
         controllerName.text.isEmpty ) {
-      showSnackBar("Lütfen boş alanları doldurun");
+      showSnackBar(isUserName?"Lütfen boş alanları doldurun":"Geçerli bir isim giriniz");
     } else {
 
 
@@ -470,5 +492,31 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
+   getUserNameList() async {
+   useerList.clear();
+    QuerySnapshot querySnapshot=await FirebaseFirestore.instance.collection("users").get();
+    List list=querySnapshot.docs;
+    for(int i=0;i<list.length;i++){
+      useerList.add(list[i]["nick"]);
+  }
+  }
+  userName(name){
+    print(useerList);
+    for(int i=0;i<useerList.length;i++){
+      print("*");
+      if(useerList[i]==name){
+        setState(() {
+          isUserName=false;
+        });
+        return ;
+
+      }
+
+    }
+    setState(() {
+      isUserName=true;
+    });
+    return ;
+  }
 
 }
