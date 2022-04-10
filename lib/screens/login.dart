@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sf_messageing/screens/splash.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -8,231 +11,74 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   bool login=true;
   TextEditingController forgetEmailController=TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     Size size =MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.blue[50],
-      body:login?Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: Column(
-              mainAxisSize: MainAxisSize.min,
-                children: [
-                  Center(
-                    child: Text("Giriş",style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                    ),),
-                  ),
-                  SizedBox(height: size.height*0.05,),
-                  Container(
-                    width: size.width*0.8,
-                    height: size.height*0.05,
-                    decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(width: 1,color: Colors.black),
-                  ),
-                    padding: EdgeInsets.only(left: 5),
-
-                    child:TextField(
-
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "mail",
-                        icon:Icon(Icons.person),
-
-                      ),
-                    ) ,
-                  ),
-                  SizedBox(height: size.height*0.02,),
-                  Container(
-                    width: size.width*0.8,
-                    height: size.height*0.05,
-                    decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(width: 1,color: Colors.black),
-                  ),
-                    padding: EdgeInsets.only(left: 5),
-                    child:TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "parola",
-                        icon:Icon(Icons.lock),
-
-                      ),) ,
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: EdgeInsets.only(right: size.width*0.1,top: 10),
-                      child: GestureDetector(
-                        onTap: ()=>forgetPwd(size),
-                        child: Text("Şifreni mi unuttun ?",style: TextStyle(
-                          color: Colors.black38,
-                        ),),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 30,),
-                  Container(
-                    width: size.width*0.3,
-                    height: size.height*0.05,
-                    decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.blue,
-                  ),
-                    alignment: Alignment.center,
-                    child:Text("Giriş yap",style: TextStyle(
-                      color: Colors.white,
-
-                    ),),
-                  ),
-
-                ],
-              ),
-            ),
+      body:Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/25332.jpg"),
+            fit: BoxFit.cover,
+            opacity: 0.1,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text("Hesabınız yok mu hemen ",style: TextStyle(
-                  color: Colors.black38,
-                   ),),
-                GestureDetector(
-                  onTap: (){
-                    setState(() {
-                      login=false;
-                    });
-                  },
-                  child: Text("kayıt ol",style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),),
-                ),
-                Text("...",style: TextStyle(
-                  color: Colors.black38,
-                ),),
-              ],
+        ),
+          child:login?loginScreen(size):
+      registerScreen(size)),
+      bottomNavigationBar:   login?   Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text("Hesabınız yok mu hemen ",style: TextStyle(
+              color: Colors.black38,
+            ),),
+            GestureDetector(
+              onTap: (){
+                setState(() {
+                  login=false;
+                });
+              },
+              child: Text("kayıt ol",style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),),
             ),
-          ),
-        ],
-      ):Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Center(
-                    child: Text("Kayıt Ol",style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                    ),),
-                  ),
-                  SizedBox(height: size.height*0.05,),
-                  Container(
-                    width: size.width*0.8,
-                    height: size.height*0.05,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(width: 1,color: Colors.black),
-                    ),
-                    padding: EdgeInsets.only(left: 5),
-                    child:TextField(
-
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "isim",
-                        icon:Icon(Icons.person),
-                      ),
-                      ) ,
-                  ),
-                  SizedBox(height: size.height*0.02,),
-                  Container(
-                    width: size.width*0.8,
-                    height: size.height*0.05,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(width: 1,color: Colors.black),
-                    ),
-                    padding: EdgeInsets.only(left: 5),
-
-                    child:TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "mail",
-                        icon:Icon(Icons.mail),
-                      ),
-                    ) ,
-                  ),
-                  SizedBox(height: size.height*0.02,),
-                  Container(
-                    width: size.width*0.8,
-                    height: size.height*0.05,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(width: 1,color: Colors.black),
-                    ),
-                    padding: EdgeInsets.only(left: 5),
-                    child:TextField(
-                      decoration: InputDecoration(
-                        icon:Icon(Icons.lock),
-                        border: InputBorder.none,
-                        hintText: "parola",
-                      ),
-                    ) ,
-                  ),
-                  SizedBox(height: 30,),
-                  Container(
-                    width: size.width*0.3,
-                    height: size.height*0.05,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.blue,
-                    ),
-                    alignment: Alignment.center,
-                    child:Text("Kayıt ol",style: TextStyle(
-                      color: Colors.white,
-
-                    ),),
-                  ),
-
-                ],
-              ),
+            Text("...",style: TextStyle(
+              color: Colors.black38,
+            ),),
+          ],
+        ),
+      ):   Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text("Hesabınız var mı hemen ",style: TextStyle(
+              color: Colors.black38,
+            ),),
+            GestureDetector(
+              onTap: (){
+                setState(() {
+                  login=true;
+                });
+              },
+              child: Text("giriş yap",style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text("Hesabınız var mı hemen ",style: TextStyle(
-                  color: Colors.black38,
-                ),),
-                GestureDetector(
-                  onTap: (){
-                    setState(() {
-                      login=true;
-                    });
-                  },
-                  child: Text("giriş yap",style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),),
-                ),
-                Text("...",style: TextStyle(
-                  color: Colors.black38,
-                ),),
-              ],
-            ),
-          ),
-        ],
+            Text("...",style: TextStyle(
+              color: Colors.black38,
+            ),),
+          ],
+        ),
       ),
     );
   }
@@ -348,5 +194,281 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
   }
+
+  TextEditingController controllerPassword=TextEditingController();
+  TextEditingController controllerMail=TextEditingController();
+  bool see=true;
+  loginScreen(Size size) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Center(
+            child: Text("Giriş",style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+            ),),
+          ),
+          SizedBox(height: size.height*0.05,),
+          Container(
+            width: size.width*0.8,
+            height: size.height*0.05,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(width: 1,color: Colors.black),
+            ),
+            padding: EdgeInsets.only(left: 5),
+
+            child:TextField(
+              controller: controllerMail,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "mail",
+                icon:Icon(Icons.person),
+
+              ),
+            ) ,
+          ),
+          SizedBox(height: size.height*0.02,),
+          Container(
+            width: size.width*0.8,
+            height: size.height*0.05,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(width: 1,color: Colors.black),
+            ),
+            padding: EdgeInsets.only(left: 5),
+            child:TextField(
+              obscureText: see,
+              controller: controllerPassword,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "parola",
+                icon:Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      see = !see;
+                    });
+                  },
+                  icon: Icon(
+                    see?Icons.visibility_off: Icons.visibility ,
+                    color: see?Colors.grey:Colors.blue,
+                  ),
+                ),
+              ),) ,
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: EdgeInsets.only(right: size.width*0.1,top: 10),
+              child: GestureDetector(
+                onTap: ()=>forgetPwd(size),
+                child: Text("Şifreni mi unuttun ?",style: TextStyle(
+                  color: Colors.black38,
+                ),),
+              ),
+            ),
+          ),
+          SizedBox(height: 30,),
+          GestureDetector(
+            onTap: ()=>onPressedSignIn(controllerMail, controllerPassword),
+            child: Container(
+              width: size.width*0.3,
+              height: size.height*0.05,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.blue,
+              ),
+              alignment: Alignment.center,
+              child:Text("Giriş yap",style: TextStyle(
+                color: Colors.white,
+
+              ),),
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
+
+  TextEditingController controllerName=TextEditingController();
+  TextEditingController controllerRegisterMail=TextEditingController();
+  TextEditingController controllerRegisterPassword=TextEditingController();
+  bool see1=true;
+  registerScreen(Size size) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Center(
+            child: Text("Kayıt Ol",style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+            ),),
+          ),
+          SizedBox(height: size.height*0.05,),
+          Container(
+            width: size.width*0.8,
+            height: size.height*0.05,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(width: 1,color: Colors.black),
+            ),
+            padding: EdgeInsets.only(left: 5),
+            child:TextField(
+              controller: controllerName,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "isim",
+                icon:Icon(Icons.person),
+              ),
+            ) ,
+          ),
+          SizedBox(height: size.height*0.02,),
+          Container(
+            width: size.width*0.8,
+            height: size.height*0.05,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(width: 1,color: Colors.black),
+            ),
+            padding: EdgeInsets.only(left: 5),
+
+            child:TextField(
+              controller: controllerRegisterMail,
+
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "mail",
+                icon:Icon(Icons.mail),
+              ),
+            ) ,
+          ),
+          SizedBox(height: size.height*0.02,),
+          Container(
+            width: size.width*0.8,
+            height: size.height*0.05,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(width: 1,color: Colors.black),
+            ),
+            padding: EdgeInsets.only(left: 5),
+            child:TextField(
+              controller: controllerRegisterPassword,
+              obscureText: see1,
+              decoration: InputDecoration(
+                icon:Icon(Icons.lock),
+                border: InputBorder.none,
+                hintText: "parola",
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      see1 = !see1;
+                    });
+                  },
+                  icon: Icon(
+                    see1?Icons.visibility_off: Icons.visibility ,
+                    color: see1?Colors.grey:Colors.blue,
+                  ),
+                ),
+              ),
+            ) ,
+          ),
+          SizedBox(height: 30,),
+          GestureDetector(
+            onTap: ()=>onPressedSignUp(),
+            child: Container(
+              width: size.width*0.3,
+              height: size.height*0.05,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.blue,
+              ),
+              alignment: Alignment.center,
+              child:Text("Kayıt ol",style: TextStyle(
+                color: Colors.white,
+
+              ),),
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
+
+  onPressedSignUp() async {
+    if (controllerRegisterPassword.text.isEmpty ||
+        controllerRegisterMail.text.isEmpty ||
+        controllerName.text.isEmpty ) {
+      showSnackBar("Lütfen boş alanları doldurun");
+    } else {
+
+
+        try {
+
+           await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: controllerRegisterMail.text.toString(),
+              password: controllerRegisterPassword.text.toString(),
+          );
+           User user=FirebaseAuth.instance.currentUser;
+
+           await FirebaseFirestore.instance.collection("users").doc(user.uid).set({
+             "nick":controllerName.text,
+             "id":user.uid,
+             "pp":"",
+           });
+           onPressedSignIn(controllerRegisterMail, controllerRegisterPassword);
+
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'weak-password') {
+            showSnackBar("Sağlanan şifre çok zayıf.");
+          } else if (e.code == 'email-already-in-use') {
+            showSnackBar("Bu e-posta için hesap zaten var.");
+          }
+        } catch (e) {
+          print(e);
+        }
+
+
+  }
+  }
+
+  onPressedSignIn(TextEditingController controller,TextEditingController controller1) async {
+    if (controller.text.isEmpty ||
+        controller1.text.isEmpty  ) {
+      showSnackBar("Lütfen boş alanları doldurun");
+    } else {
+
+
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: controller.text,
+            password: controller1.text,
+        );
+
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SplashScreen()));
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          showSnackBar("Bu e-posta için kullanıcı bulunamadı.");
+        } else if (e.code == 'wrong-password') {
+          showSnackBar("Bu kullanıcı için yanlış parola sağlandı.");
+        }
+      }
+
+
+  }
+  }
+
+  void showSnackBar(String text) {
+    final snackBar = SnackBar(
+      content: Text(text),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+
 
 }
