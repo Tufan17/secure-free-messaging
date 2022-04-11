@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sf_messageing/screens/message.dart';
 import 'package:sf_messageing/screens/search.dart';
 import 'package:sf_messageing/screens/splash.dart';
 
@@ -15,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List userList=[];
-
+  int profilImage=0;
   @override
   void initState() {
     getUserList();
@@ -24,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
+    profilImage=0;
     Size size=MediaQuery.of(context).size;
     return Scaffold(
       drawer: Drawer(
@@ -46,6 +48,58 @@ class _HomePageState extends State<HomePage> {
             );
           },icon:Icon(Icons.person_add_alt_1_outlined),),
         ],
+      ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("chat").doc(userModel.id).collection("textedBy").orderBy("timeStamp").snapshots(),
+        builder: (BuildContext context,
+            AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text("Eror :" + snapshot.hasError.toString()),
+            );
+          }
+          if (snapshot.hasData) {
+          }
+          return !snapshot.hasData
+              ? Center(
+            child: CircularProgressIndicator(),
+          )
+              : ListView(
+            physics: BouncingScrollPhysics(),
+            children: snapshot.data.docs.map((doc) {
+              profilImage++;
+              if (userModel == null) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              try {
+                return ListTile(
+                  onTap: ()=>goMessage(doc["to"]==userModel.id?doc["from"]:doc["to"]),
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage("assets/images/profile/${profilImage%20}.png"),
+                  ),
+                  title: Text(
+                    doc["nick"],
+                    style: TextStyle(
+                      fontSize: size.width * 0.04,
+                      color: Colors.black,
+                    ),
+                  ),
+                  subtitle: Text(
+                    doc["message"],
+                    style: TextStyle(
+                      fontSize: size.width * 0.04,
+                      color: Colors.black,
+                    ),
+                  ),
+                );
+              } catch (e) {
+                print(e.toString());
+              }
+            }).toList(),
+          );
+        },
       ),
     );
   }
@@ -103,6 +157,17 @@ class _HomePageState extends State<HomePage> {
     for(int i=0;i<list.length;i++){
       if(userModel.name!=list[i]["nick"]){
         userList.add(list[i]["nick"]);
+      }
+    }
+  }
+  Future<void> goMessage(String id) async {
+    QuerySnapshot querySnapshot=await FirebaseFirestore.instance.collection("users").get();
+    List list=querySnapshot.docs;
+    for(int i=0;i<list.length;i++){
+      if(userModel.id!=list[i]["id"]){
+        if(id==list[i]["id"]){
+          return Navigator.push(context, MaterialPageRoute(builder: (context)=>Message(data: list[i].data(),)));
+        }
       }
     }
   }
