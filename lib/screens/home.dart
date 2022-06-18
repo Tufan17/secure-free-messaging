@@ -25,7 +25,6 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
-    profilImage=0;
     Size size=MediaQuery.of(context).size;
     return Scaffold(
       drawer: Drawer(
@@ -35,7 +34,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData.fallback(),
         title: Row(children: [
-          Image.asset("assets/images/logo.png",height: 50,),
+          Image.asset("assets/images/SF.png",height: 100,),
           Text("Mesajlar",style: TextStyle(
             color: Colors.black,
           ),),
@@ -53,6 +52,8 @@ class _HomePageState extends State<HomePage> {
         stream: FirebaseFirestore.instance.collection("chat").doc(userModel.id).collection("textedBy").orderBy("timeStamp").snapshots(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot> snapshot) {
+          profilImage=0;
+
           if (snapshot.hasError) {
             return Center(
               child: Text("Eror :" + snapshot.hasError.toString()),
